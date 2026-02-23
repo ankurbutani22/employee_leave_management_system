@@ -4,19 +4,16 @@ const jwt = require('jsonwebtoken')
 const cloudinary = require('../config/cloudinary')
 const streamifier = require('streamifier')
 
-// 1. SIGNUP - નવો કર્મચારી ઉમેરવા માટે
-exports.create = async (req, res) => {
+// 1. SIGNUP - Create new employee
+const create = async (req, res) => {
   try {
     const { name, email, password } = req.body
-    
-    // ઈમેઈલ પહેલેથી છે કે નહીં તે ચેક કરો
+
     const existing = await Employee.findOne({ email })
     if (existing) return res.status(400).json({ success: false, message: 'Employee already exists' })
 
-    // પાસવર્ડ હેશ કરો
     const hash = await bcrypt.hash(password, 10)
 
-    // ઈમેજ અપલોડ લોજિક (જો ફાઈલ હોય તો)
     let avatarUrl = ''
     if (req.file) {
       const result = await new Promise((resolve, reject) => {
@@ -32,7 +29,6 @@ exports.create = async (req, res) => {
       avatarUrl = result.secure_url
     }
 
-    // ડેટાબેઝમાં સેવ કરો
     const employee = await Employee.create({
       name,
       email,
@@ -40,21 +36,21 @@ exports.create = async (req, res) => {
       avatar: avatarUrl
     })
 
-    res.status(201).json({ 
-      success: true, 
-      message: "Registration successful! Please login." 
+    res.status(201).json({
+      success: true,
+      message: "Registration successful! Please login."
     })
   } catch (err) {
     res.status(500).json({ success: false, message: err.message })
   }
 }
 
-// 2. LOGIN - કર્મચારી લોગિન કરવા માટે
-exports.login = async (req, res) => {
+// 2. LOGIN - Employee login
+const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const employee = await Employee.findOne({ email });
-    
+
     if (!employee) {
       return res.status(404).json({ success: false, message: 'Employee not found' });
     }
@@ -65,8 +61,8 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { employeeId: employee._id }, 
-      process.env.JWT_SECRET, 
+      { employeeId: employee._id },
+      process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
 
@@ -81,31 +77,28 @@ exports.login = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 }
-// બાકીના ફંક્શન (list, updateProfile) જે છે તે જ રહેશે...
-exports.list = async (req, res) => {
-    try {
-        const emps = await Employee.find().select('-password')
-        res.json(emps)
-    } catch (err) {
-        res.status(500).json({ message: err.message })
-    }
+
+// 3. LIST - Admin only
+const list = async (req, res) => {
+  try {
+    const emps = await Employee.find().select('-password')
+    res.json(emps)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
 }
 
-
-
-exports.updateProfile = async (req, res) => {
+// 4. UPDATE PROFILE - Employee only
+const updateProfile = async (req, res) => {
   try {
-    const { employeeId } = req.user // Get ID from the logged-in token
+    const { employeeId } = req.user
     const { name } = req.body
-    
-    // 1. Find the employee
+
     let employee = await Employee.findById(employeeId)
     if (!employee) return res.status(404).json({ message: 'Employee not found' })
 
-    // 2. Update Name if provided
     if (name) employee.name = name
 
-    // 3. Update Avatar if a file is provided
     if (req.file) {
       const result = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
@@ -120,17 +113,15 @@ exports.updateProfile = async (req, res) => {
       employee.avatar = result.secure_url
     }
 
-    // 4. Save to Database
     await employee.save()
 
-    // 5. Return updated info (excluding password)
-    res.json({ 
-      success: true, 
-      user: { 
-        name: employee.name, 
-        email: employee.email, 
-        avatar: employee.avatar 
-      } 
+    res.json({
+      success: true,
+      user: {
+        name: employee.name,
+        email: employee.email,
+        avatar: employee.avatar
+      }
     })
 
   } catch (err) {
@@ -138,3 +129,28 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({ message: err.message })
   }
 }
+
+// 5. REMOVE - Admin only
+const remove = async (req, res) => {
+  try {
+    const { id } = req.params
+    const deleted = await Employee.findByIdAndDelete(id)
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: 'Employee not found' })
+    }
+    res.json({ success: true, message: 'Employee deleted successfully' })
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message })
+  }
+}
+
+// Exports
+module.exports = {
+  create,
+  login,
+  list,
+  updateProfile,
+  remove
+}
+
+console.log('Employee Controller Loaded Successfully')

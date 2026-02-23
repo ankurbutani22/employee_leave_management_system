@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 
-const API_URL = 'http://localhost:5000/api'
+const API_URL = import.meta.env.VITE_API_URL || '/api'
 
 function decodeToken(token) {
   try { return JSON.parse(atob(token.split('.')[1])) } catch (e) { return null }

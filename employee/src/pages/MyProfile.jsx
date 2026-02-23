@@ -3,7 +3,7 @@ import Header from '../components/Header'
 import { toast } from 'react-toastify'
 import { Camera, Save, X, Edit2 } from 'lucide-react' // Make sure you have lucide-react or use text
 
-const API_URL = 'http://localhost:5000/api'
+const API_URL = import.meta.env.VITE_API_URL || '/api'
 
 export default function MyProfile() {
   // State

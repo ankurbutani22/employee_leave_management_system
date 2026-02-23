@@ -13,6 +13,6 @@ router.post('/login', empCtrl.login)
 
 
 router.put('/profile', authEmployee, upload.single('image'), empCtrl.updateProfile)
-router.delete('/:id', authAdmin, empCtrl.remove)
+// router.delete('/:id', authAdmin, empCtrl.remove)
 
 module.exports = router

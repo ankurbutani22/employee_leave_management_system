@@ -18,7 +18,11 @@ import TopBar from './components/TopBar'
 // Layout Component
 function AdminLayout() {
   const auth = localStorage.getItem('adminToken')
-  if (!auth) return <Navigate to="/login" replace />
+  if (!auth) {
+    // Redirect to the unified login at the root
+    window.location.href = '/auth'
+    return null
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -37,15 +41,13 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <ToastContainer position="top-right" autoClose={3000} />
-      
+
       <Routes>
-        <Route path="/login" element={<Login />} />
-        
         {/* Admin Layout */}
         <Route element={<AdminLayout />}>
           {/* Change this line to point to Home instead of Navigate */}
-          <Route path="/" element={<Home />} /> 
-          
+          <Route path="/" element={<Home />} />
+
           <Route path="/employees" element={<AllEmployees />} />
           <Route path="/add-employee" element={<AddEmployee />} />
           <Route path="/leaves" element={<AllLeaves />} />

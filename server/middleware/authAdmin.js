@@ -6,7 +6,10 @@ module.exports = function (req, res, next) {
   const token = auth.split(' ')[1]
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET)
-    if (payload.isAdmin) return res.status(403).json({ message: 'Admin only' })
+    // payload.role is 'admin' or payload.isAdmin is true
+    if (payload.role !== 'admin' && !payload.isAdmin) {
+      return res.status(403).json({ message: 'Admin access denied' })
+    }
     req.user = payload
     next()
   } catch (err) {

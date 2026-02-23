@@ -1,0 +1,14 @@
+{
+    "name": "employee-leave-management-system",
+    "version": "1.0.0",
+    "scripts": {
+        "install-all": "npm install && cd server && npm install && cd ../admin && npm install && cd ../employee && npm install",
+        "build-frontends": "cd admin && npm run build && cd ../employee && npm run build",
+        "start": "cd server && node server.js",
+        "dev": "cd server && npm run dev",
+        "render-build": "npm run install-all && npm run build-frontends"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}
