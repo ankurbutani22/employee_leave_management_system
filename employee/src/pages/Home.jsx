@@ -3,7 +3,7 @@ import Header from '../components/Header'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 
-const API_URL = 'http://localhost:5000/api'
+const API_URL = 'https://employee-leave-management-system-ec0q.onrender.com/api'
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
@@ -41,7 +41,7 @@ export default function Home() {
 
     try {
       setLoading(true)
-      
+
       // Decode Token to get ID
       let employeeId = null
       try {
@@ -53,17 +53,17 @@ export default function Home() {
       const res = await fetch(`${API_URL}/leaves/leave-status`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
-      
+
       if (res.ok) {
         const allLeaves = await res.json()
-        
+
         // Filter: Only show THIS employee's data
         const myLeaves = allLeaves.filter(l => (l.employee?._id || l.employee) === employeeId)
-        
+
         // Calculate Real Stats
         const pendingCount = myLeaves.filter(l => l.status === 'pending').length
         const approvedCount = myLeaves.filter(l => l.status === 'approved').length // Used for 'Leaves Taken'
-        
+
         setStats([
           { label: 'Annual Balance', value: `${12 - approvedCount} Days`, color: 'bg-emerald-100 text-emerald-600', icon: '🌴' },
           { label: 'Pending Requests', value: pendingCount.toString(), color: 'bg-amber-100 text-amber-600', icon: '⏳' },
@@ -97,15 +97,15 @@ export default function Home() {
           <p className="text-slate-500 mt-2 text-base md:text-lg">
             Welcome to your personal dashboard. You can track your time off here.
           </p>
-          
+
           <div className="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3">
-            <button 
+            <button
               onClick={() => navigate('/leave-request')}
               className="w-full sm:w-auto justify-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-md shadow-indigo-200 transition-all transform active:scale-95 flex items-center gap-2"
             >
               <span>+</span> Request Leave
             </button>
-            <button 
+            <button
               onClick={() => navigate('/leave-status')}
               className="w-full sm:w-auto justify-center px-6 py-3 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 font-medium rounded-lg transition-all"
             >
@@ -113,16 +113,16 @@ export default function Home() {
             </button>
           </div>
         </div>
-        
+
         {/* Decorative Circle (Hidden on mobile) */}
         <div className="hidden md:flex h-32 w-32 lg:h-40 lg:w-40 bg-indigo-50 rounded-full items-center justify-center text-5xl lg:text-6xl opacity-80 shrink-0 border-4 border-white shadow-sm">
-           🏠
+          🏠
         </div>
       </div>
 
       {loading ? (
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
-          {[1,2,3].map(i => <div key={i} className="h-32 bg-slate-200 rounded-xl"></div>)}
+          {[1, 2, 3].map(i => <div key={i} className="h-32 bg-slate-200 rounded-xl"></div>)}
         </div>
       ) : (
         <>
@@ -147,7 +147,7 @@ export default function Home() {
 
           {/* Lower Section: Activity & Info */}
           <div className="mt-6 md:mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-            
+
             {/* My Recent Activity */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 flex flex-col">
               <div className="flex justify-between items-center mb-6">
@@ -164,14 +164,13 @@ export default function Home() {
                 ) : (
                   recentActivity.map((item, idx) => (
                     <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-4 rounded-lg bg-slate-50 hover:bg-white border border-slate-100 hover:border-indigo-100 transition-all shadow-sm hover:shadow-md">
-                      
+
                       {/* Top Row for Mobile (Status Dot + Reason) */}
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                         {/* Status Dot */}
-                        <div className={`shrink-0 h-3 w-3 rounded-full ${
-                          item.status === 'approved' ? 'bg-emerald-500 shadow-emerald-200' : 
-                          item.status === 'cancelled' ? 'bg-rose-500 shadow-rose-200' : 'bg-amber-400 shadow-amber-200'
-                        } shadow-lg`} />
+                        {/* Status Dot */}
+                        <div className={`shrink-0 h-3 w-3 rounded-full ${item.status === 'approved' ? 'bg-emerald-500 shadow-emerald-200' :
+                            item.status === 'cancelled' ? 'bg-rose-500 shadow-rose-200' : 'bg-amber-400 shadow-amber-200'
+                          } shadow-lg`} />
 
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-slate-800 truncate">{item.reason || 'No reason provided'}</p>
@@ -186,10 +185,9 @@ export default function Home() {
                         <p className="text-xs text-slate-500 hidden sm:block">
                           {new Date(item.startDate).toLocaleDateString()} &rarr; {new Date(item.endDate).toLocaleDateString()}
                         </p>
-                        <span className={`text-xs font-bold px-2 py-1 rounded uppercase tracking-wide shrink-0 ${
-                           item.status === 'approved' ? 'bg-emerald-100 text-emerald-700' : 
-                           item.status === 'cancelled' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'
-                        }`}>
+                        <span className={`text-xs font-bold px-2 py-1 rounded uppercase tracking-wide shrink-0 ${item.status === 'approved' ? 'bg-emerald-100 text-emerald-700' :
+                            item.status === 'cancelled' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'
+                          }`}>
                           {item.status}
                         </span>
                       </div>
@@ -197,7 +195,7 @@ export default function Home() {
                   ))
                 )}
               </div>
-              
+
               {recentActivity.length > 0 && (
                 <button onClick={() => navigate('/leave-status')} className="mt-6 w-full py-2 text-sm text-slate-500 hover:text-indigo-600 hover:bg-slate-50 rounded transition-colors">
                   View All Activity &rarr;
@@ -207,22 +205,22 @@ export default function Home() {
 
             {/* Sidebar: Calendar & Support */}
             <div className="space-y-6">
-              
+
               {/* Upcoming Holiday Widget */}
               <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-xl shadow-lg shadow-indigo-200 p-6 text-white relative overflow-hidden">
                 <div className="relative z-10">
-                   <div className="flex items-center gap-2 mb-4 opacity-90">
-                     <span className="text-xl">📅</span>
-                     <span className="text-sm font-medium uppercase tracking-wider">Next Public Holiday</span>
-                   </div>
-                   <h3 className="text-2xl md:text-3xl font-bold mb-1">Thanksgiving</h3>
-                   <p className="text-indigo-200 text-sm mb-6">Thursday, Nov 28th</p>
-                   
-                   <div className="bg-white/10 p-3 rounded-lg backdrop-blur-sm border border-white/20">
-                     <p className="text-xs text-indigo-50 leading-relaxed">
-                       ℹ️ Office will be closed. Use your leaves if you plan to take the Friday off as well.
-                     </p>
-                   </div>
+                  <div className="flex items-center gap-2 mb-4 opacity-90">
+                    <span className="text-xl">📅</span>
+                    <span className="text-sm font-medium uppercase tracking-wider">Next Public Holiday</span>
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-1">Thanksgiving</h3>
+                  <p className="text-indigo-200 text-sm mb-6">Thursday, Nov 28th</p>
+
+                  <div className="bg-white/10 p-3 rounded-lg backdrop-blur-sm border border-white/20">
+                    <p className="text-xs text-indigo-50 leading-relaxed">
+                      ℹ️ Office will be closed. Use your leaves if you plan to take the Friday off as well.
+                    </p>
+                  </div>
                 </div>
                 {/* Background Decor */}
                 <div className="absolute -right-4 -top-4 text-[8rem] md:text-[10rem] opacity-5 rotate-12">🍂</div>

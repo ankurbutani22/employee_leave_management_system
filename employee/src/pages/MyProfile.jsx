@@ -3,7 +3,7 @@ import Header from '../components/Header'
 import { toast } from 'react-toastify'
 import { Camera, Save, X, Edit2 } from 'lucide-react'
 
-const API_URL = 'http://localhost:5000/api'
+const API_URL = 'https://employee-leave-management-system-ec0q.onrender.com/api'
 
 export default function MyProfile() {
   // State

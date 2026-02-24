@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
-const API_URL = 'http://localhost:5000/api'
+const API_URL = 'https://employee-leave-management-system-ec0q.onrender.com/api'
 
 export default function AllLeaves() {
   const [leaves, setLeaves] = useState([])

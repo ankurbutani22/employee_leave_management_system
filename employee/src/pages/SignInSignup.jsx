@@ -2,18 +2,18 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-const API_URL = 'http://localhost:5000/api'
+const API_URL = 'https://employee-leave-management-system-ec0q.onrender.com/api'
 
 export default function SignInSignup() {
   const [mode, setMode] = useState('signin') // 'signin' or 'signup'
-  
+
   // Form State
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [avatar, setAvatar] = useState('') 
-  const [preview, setPreview] = useState(null) 
-  
+  const [avatar, setAvatar] = useState('')
+  const [preview, setPreview] = useState(null)
+
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
@@ -21,69 +21,69 @@ export default function SignInSignup() {
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
-      if (file.size > 2 * 1024 * 1024) { 
+      if (file.size > 2 * 1024 * 1024) {
         return toast.error('Image size must be less than 2MB')
       }
-      
+
       const reader = new FileReader()
       reader.onloadend = () => {
         setPreview(reader.result)
-        setAvatar(reader.result) 
+        setAvatar(reader.result)
       }
       reader.readAsDataURL(file)
     }
   }
 
-async function handleAuth(e) {
-  e.preventDefault();
-  setLoading(true);
+  async function handleAuth(e) {
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
-    
-    if (mode === 'signup') {
-      formData.append('name', name);
-      // જો તમે ફાઇલ સિલેક્ટ કરી હોય
-      if (e.target.image && e.target.image.files[0]) {
-        formData.append('image', e.target.image.files[0]);
+    try {
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+
+      if (mode === 'signup') {
+        formData.append('name', name);
+        // જો તમે ફાઇલ સિલેક્ટ કરી હોય
+        if (e.target.image && e.target.image.files[0]) {
+          formData.append('image', e.target.image.files[0]);
+        }
       }
+
+      const endpoint = mode === 'signin' ? 'login' : '';
+      const res = await fetch(`${API_URL}/employees/${endpoint}`, {
+        method: 'POST',
+        body: mode === 'signin' ? JSON.stringify({ email, password }) : formData,
+        ...(mode === 'signin' && { headers: { 'Content-Type': 'application/json' } })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Auth failed');
+
+      if (mode === 'signin') {
+        localStorage.setItem('empToken', data.token);
+        localStorage.setItem('emp_name', data.name);
+        localStorage.setItem('emp_email', data.email);
+        localStorage.setItem('emp_avatar', data.avatar);
+        localStorage.setItem('emp_auth', 'true');
+        toast.success('Login Successful!');
+        navigate('/');
+      } else {
+        toast.success('Registration Successful! Please Login.');
+        setMode('signin');
+      }
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
-
-    const endpoint = mode === 'signin' ? 'login' : ''; 
-    const res = await fetch(`${API_URL}/employees/${endpoint}`, {
-      method: 'POST',
-      body: mode === 'signin' ? JSON.stringify({ email, password }) : formData,
-      ...(mode === 'signin' && { headers: { 'Content-Type': 'application/json' } })
-    });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Auth failed');
-
-    if (mode === 'signin') {
-      localStorage.setItem('empToken', data.token);
-      localStorage.setItem('emp_name', data.name);
-      localStorage.setItem('emp_email', data.email);
-      localStorage.setItem('emp_avatar', data.avatar);
-      localStorage.setItem('emp_auth', 'true');
-      toast.success('Login Successful!');
-      navigate('/');
-    } else {
-      toast.success('Registration Successful! Please Login.');
-      setMode('signin');
-    }
-  } catch (err) {
-    toast.error(err.message);
-  } finally {
-    setLoading(false);
   }
-}
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
-        
+
         {/* Header Section */}
         {/* Responsive Padding: p-6 for mobile, md:p-8 for desktop */}
         <div className="bg-indigo-600 p-6 md:p-8 text-center relative overflow-hidden">
@@ -93,8 +93,8 @@ async function handleAuth(e) {
               {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
             </h2>
             <p className="text-indigo-100 text-sm">
-              {mode === 'signin' 
-                ? 'Enter your credentials to access your dashboard' 
+              {mode === 'signin'
+                ? 'Enter your credentials to access your dashboard'
                 : 'Join our team management portal today'}
             </p>
           </div>
@@ -107,7 +107,7 @@ async function handleAuth(e) {
         {/* Responsive Padding here as well */}
         <div className="p-6 md:p-8">
           <form onSubmit={handleAuth} className="space-y-5">
-            
+
             {/* --- SIGN UP FIELDS --- */}
             {mode === 'signup' && (
               <>
@@ -115,12 +115,12 @@ async function handleAuth(e) {
                 <div className="flex justify-center mb-6">
                   <div className="relative group">
                     <label className="cursor-pointer">
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        name="image" 
-                        className="hidden" 
-                        onChange={handleImageChange} 
+                      <input
+                        type="file"
+                        accept="image/*"
+                        name="image"
+                        className="hidden"
+                        onChange={handleImageChange}
                       />
                       <div className={`w-24 h-24 rounded-full border-4 border-slate-100 shadow-sm flex items-center justify-center overflow-hidden transition-colors ${!preview ? 'bg-slate-50 hover:bg-slate-100' : 'bg-white'}`}>
                         {preview ? (
@@ -177,12 +177,12 @@ async function handleAuth(e) {
             </div>
 
             {/* Submit Button */}
-            <button 
+            <button
               disabled={loading}
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 mt-4"
             >
               {loading ? (
-                 <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
               ) : (
                 <>
                   {mode === 'signin' ? 'Sign In' : 'Create Account'}
@@ -196,7 +196,7 @@ async function handleAuth(e) {
           <div className="mt-8 text-center">
             <p className="text-slate-500 text-sm">
               {mode === 'signin' ? "Don't have an account? " : "Already have an account? "}
-              <button 
+              <button
                 onClick={() => {
                   setMode(mode === 'signin' ? 'signup' : 'signin')
                   setPreview(null) // Reset image on toggle

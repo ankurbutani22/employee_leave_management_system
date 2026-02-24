@@ -23,7 +23,7 @@ The system has three main components that communicate via RESTful APIs:
 
 ## Backend Server (Port 5000)
 
-**Base URL:** `http://localhost:5000`
+**Base URL:** `https://employee-leave-management-system-ec0q.onrender.com`
 
 ### Admin Endpoints
 
@@ -419,14 +419,14 @@ All errors follow this structure:
 
 **Admin Login:**
 ```bash
-curl -X POST http://localhost:5000/api/admin/login \
+curl -X POST https://employee-leave-management-system-ec0q.onrender.com/api/admin/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@example.com","password":"password123"}'
 ```
 
 **Create Employee:**
 ```bash
-curl -X POST http://localhost:5000/api/employees \
+curl -X POST https://employee-leave-management-system-ec0q.onrender.com/api/employees \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
   -d '{
@@ -438,7 +438,7 @@ curl -X POST http://localhost:5000/api/employees \
 
 **Create Leave Request:**
 ```bash
-curl -X POST http://localhost:5000/api/leaves \
+curl -X POST https://employee-leave-management-system-ec0q.onrender.com/api/leaves \
   -H "Content-Type: application/json" \
   -d '{
     "employeeId":"EMPLOYEE_MONGO_ID",
@@ -453,7 +453,7 @@ curl -X POST http://localhost:5000/api/leaves \
 
 ## Next Steps for Integration
 
-1. **Admin Frontend:** Update React components to fetch from `http://localhost:5000/api/admin` and `http://localhost:5000/api/employees`
+1. **Admin Frontend:** Update React components to fetch from `https://employee-leave-management-system-ec0q.onrender.com/api/admin` and `https://employee-leave-management-system-ec0q.onrender.com/api/employees`
 2. **Employee Frontend:** Update React components to use backend API instead of localStorage
 3. **Token Management:** Store JWT tokens in localStorage/sessionStorage and include in Authorization headers
 4. **Error Handling:** Implement proper error handling for API responses
@@ -493,4 +493,4 @@ npm run dev
 **Access Points:**
 - Admin: `http://localhost:5173`
 - Employee: `http://localhost:5174` (or next available port)
-- API: `http://localhost:5000`
+- API: `https://employee-leave-management-system-ec0q.onrender.com`

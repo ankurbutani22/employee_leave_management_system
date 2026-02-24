@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-const API_URL = 'http://localhost:5000/api'
+const API_URL = 'https://employee-leave-management-system-ec0q.onrender.com/api'
 
 export default function Login() {
   const [email, setEmail] = useState('admin@example.com')
@@ -16,7 +16,7 @@ export default function Login() {
       toast.error('Provide credentials')
       return
     }
-    
+
     setLoading(true)
     try {
       const res = await fetch(`${API_URL}/admin/login`, {
@@ -24,13 +24,13 @@ export default function Login() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       })
-      
+
       if (!res.ok) {
         const err = await res.json()
         toast.error(err.message || 'Login failed')
         return
       }
-      
+
       const data = await res.json()
       localStorage.setItem('adminToken', data.token)
       localStorage.setItem('adminEmail', email)
