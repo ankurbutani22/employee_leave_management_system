@@ -26,10 +26,12 @@ function AdminLayout() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
-      <div className="flex-1 ml-64 flex flex-col">
+      <div className="hidden md:block">
+        <Sidebar />
+      </div>
+      <div className="flex-1 md:ml-64 flex flex-col min-w-0">
         <TopBar />
-        <main className="p-8 flex-1 overflow-y-auto">
+        <main className="p-4 sm:p-6 md:p-8 flex-1 overflow-y-auto">
           <Outlet />
         </main>
       </div>

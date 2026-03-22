@@ -82,8 +82,8 @@ export default function AllEmployees() {
   }
 
   return (
-    <div className="p-8 bg-slate-50 min-h-screen">
-      <div className="flex justify-between items-end mb-6">
+    <div className="bg-slate-50 min-h-full">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-6">
         <div>
           <h3 className="text-2xl font-bold text-slate-800">Employee Directory</h3>
           <p className="text-slate-500 text-sm mt-1">Manage system access and users</p>
@@ -91,7 +91,7 @@ export default function AllEmployees() {
         
         <button 
           onClick={exportToCSV}
-          className="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2"
+          className="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center justify-center sm:justify-start gap-2 w-full sm:w-auto"
         >
           <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
           Export List
@@ -104,7 +104,43 @@ export default function AllEmployees() {
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-          <table className="w-full text-left border-collapse">
+          <div className="md:hidden divide-y divide-slate-100">
+            {employees.map(emp => (
+              <div key={emp._id || emp.id} className="p-4 space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex-shrink-0 h-10 w-10">
+                    {emp.avatar ? (
+                      <img
+                        className="h-10 w-10 rounded-full object-cover border border-slate-200"
+                        src={emp.avatar}
+                        alt=""
+                      />
+                    ) : (
+                      <div className="h-10 w-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm border border-indigo-200">
+                        {emp.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-medium text-slate-700 truncate">{emp.name}</p>
+                    <p className="text-xs text-slate-400 font-mono mt-0.5">ID: #{emp._id ? emp._id.slice(-4) : emp.id}</p>
+                  </div>
+                </div>
+
+                <p className="text-sm text-slate-500 break-all">{emp.email}</p>
+
+                <button
+                  onClick={() => remove(emp._id || emp.id)}
+                  className="w-full text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-2 rounded text-sm font-medium transition-colors border border-rose-100"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[720px]">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Employee</th>
@@ -151,6 +187,7 @@ export default function AllEmployees() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>
