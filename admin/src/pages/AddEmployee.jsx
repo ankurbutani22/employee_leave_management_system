@@ -1,25 +1,25 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 
-// તમારા બેકએન્ડનું એડ્રેસ
+// Backend API base URL
 const API_URL = import.meta.env.VITE_API_URL || '/api'
 
 export default function AddEmployee() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [image, setImage] = useState(null)      // ઈમેજ સ્ટોર કરવા
-  const [preview, setPreview] = useState(null)  // પ્રીવ્યૂ બતાવવા
+  const [image, setImage] = useState(null)      // Store selected image
+  const [preview, setPreview] = useState(null)  // Show image preview
   const [loading, setLoading] = useState(false)
   
   const token = localStorage.getItem('adminToken')
 
-  // જ્યારે યુઝર ફોટો પસંદ કરે
+  // Handle image selection
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
       setImage(file)
-      setPreview(URL.createObjectURL(file)) // ઈમેજનું પ્રીવ્યૂ URL બનાવો
+      setPreview(URL.createObjectURL(file)) // Create preview URL for image
     }
   }
 
@@ -34,24 +34,24 @@ export default function AddEmployee() {
 
     setLoading(true)
     
-    // 2. FormData બનાવો (Image Upload માટે JSON ન ચાલે)
+    // 2. Build FormData (JSON does not work for image upload)
     const formData = new FormData()
     formData.append('name', name)
     formData.append('email', email)
     formData.append('password', password)
     
     if (image) {
-      formData.append('image', image) // ઈમેજ ફાઈલ ઉમેરો
+      formData.append('image', image) // Attach image file
     }
 
     try {
       const res = await fetch(`${API_URL}/employees`, {
         method: 'POST',
         headers: {
-          // 'Content-Type': 'application/json', <--- FormData મોકલતી વખતે આ લાઈન ન લખવી
+          // 'Content-Type': 'application/json', <--- Do not set this when sending FormData
           'Authorization': `Bearer ${token}`
         },
-        body: formData // Body માં formData મોકલો
+        body: formData // Send FormData in request body
       })
 
       if (!res.ok) {
@@ -77,7 +77,7 @@ export default function AddEmployee() {
   }
 
   return (
-    // આખા પેજનું સેટિંગ (Center Alignment)
+    // Page layout (center alignment)
     <div className="min-h-[80vh] flex items-center  justify-center p-2">
       
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">

@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function TopBar() {
-  // લોકલ સ્ટોરેજમાંથી નામ/ઈમેઈલ લાવો
+  // Read name/email from local storage
   const adminEmail = localStorage.getItem('adminEmail') || 'Admin User'
 
   return (
