@@ -95,7 +95,7 @@ export default function AllEmployees() {
     <div className="bg-slate-50 min-h-full">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-6">
         <div>
-          <h3 className="text-2xl font-bold text-slate-800">Employee Directory</h3>
+          <h3 className="text-xl sm:text-2xl font-bold text-slate-800">Employee Directory</h3>
           <p className="text-slate-500 text-sm mt-1">Manage system access and users</p>
         </div>
 
@@ -118,8 +118,8 @@ export default function AllEmployees() {
           <p className="text-slate-500 text-sm mt-1">Add an employee to see them listed here.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="xl:hidden p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-3 sm:p-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
             {employees.map((emp) => (
               <div key={emp._id || emp.id} className="border border-slate-200 rounded-xl p-4 bg-white shadow-sm">
                 <div className="flex items-start justify-between gap-3">
@@ -153,50 +153,6 @@ export default function AllEmployees() {
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className="hidden xl:block overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[820px]">
-              <thead className="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Employee</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Contact</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">System ID</th>
-                  <th className="px-6 py-4 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {employees.map((emp) => (
-                  <tr key={emp._id || emp.id} className="hover:bg-slate-50 transition-colors group">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-4">
-                        <div className="flex-shrink-0 h-10 w-10">
-                          {emp.avatar ? (
-                            <img className="h-10 w-10 rounded-full object-cover border border-slate-200" src={emp.avatar} alt="" />
-                          ) : (
-                            <div className="h-10 w-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm border border-indigo-200">
-                              {emp.name.charAt(0).toUpperCase()}
-                            </div>
-                          )}
-                        </div>
-
-                        <span className="font-medium text-slate-700">{emp.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-500">{emp.email}</td>
-                    <td className="px-6 py-4 text-sm text-slate-400 font-mono">#{getShortId(emp)}</td>
-                    <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => remove(emp._id || emp.id)}
-                        className="text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-1 rounded text-sm font-medium transition-colors"
-                      >
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </div>
       )}
