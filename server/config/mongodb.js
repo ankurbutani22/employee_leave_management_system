@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 
+// Connect to MongoDB using MONGO_URI and exit process on fatal connection errors.
 module.exports = function connectDB() {
   const uri = process.env.MONGO_URI
   if (!uri) {

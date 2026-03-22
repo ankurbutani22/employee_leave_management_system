@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-// યુઝર લોગીન છે કે નહીં તે ચેક કરવા માટે
+// Validate JWT and attach decoded user payload to req.user.
 exports.protect = async (req, res, next) => {
   let token;
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -18,7 +18,7 @@ exports.protect = async (req, res, next) => {
   }
 };
 
-// માત્ર એડમિન માટે
+// Allow access only when authenticated user has admin role.
 exports.adminOnly = (req, res, next) => {
  if (req.user && req.user.role === 'admin') { // <--- Checks for 'role'
    next();

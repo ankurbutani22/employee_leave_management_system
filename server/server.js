@@ -19,17 +19,25 @@ app.use('/api/admin', adminRoutes)
 app.use('/api/employees', employeeRoutes)
 app.use('/api/leaves', leaveRoutes)
 
+// Health Check
+app.get('/health', (req, res) => res.status(200).send('OK'))
+
 // Serve Admin Frontend
-app.use('/admin', express.static(path.join(__dirname, '../admin/dist')))
+const adminPath = path.resolve(__dirname, '../admin/dist')
+app.use('/admin', express.static(adminPath))
 app.get('/admin/*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../admin/dist/index.html'))
+    res.sendFile(path.join(adminPath, 'index.html'))
 })
 
 // Serve Employee Frontend (Root)
-app.use(express.static(path.join(__dirname, '../employee/dist')))
+const employeePath = path.resolve(__dirname, '../employee/dist')
+app.use(express.static(employeePath))
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../employee/dist/index.html'))
+    res.sendFile(path.join(employeePath, 'index.html'))
 })
+
+console.log('Admin Static Path:', adminPath)
+console.log('Employee Static Path:', employeePath)
 
 const PORT = process.env.PORT || 7000
 app.listen(PORT, '0.0.0.0', () => {

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 
+// Allow only requests with a valid admin JWT in Authorization header.
 module.exports = function (req, res, next) {
   const auth = req.headers.authorization
   if (!auth || !auth.startsWith('Bearer ')) return res.status(401).json({ message: 'No token' })

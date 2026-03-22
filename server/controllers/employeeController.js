@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const cloudinary = require('../config/cloudinary')
 const streamifier = require('streamifier')
 
-// 1. SIGNUP - Create new employee
+// Create a new employee account and optionally upload avatar to Cloudinary.
 const create = async (req, res) => {
   try {
     const { name, email, password } = req.body
@@ -45,7 +45,7 @@ const create = async (req, res) => {
   }
 }
 
-// 2. LOGIN - Employee login
+// Authenticate employee and return token plus profile basics.
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -78,7 +78,7 @@ const login = async (req, res) => {
   }
 }
 
-// 3. LIST - Admin only
+// Return all employees without passwords (used by admin views).
 const list = async (req, res) => {
   try {
     const emps = await Employee.find().select('-password')
@@ -88,7 +88,7 @@ const list = async (req, res) => {
   }
 }
 
-// 4. UPDATE PROFILE - Employee only
+// Update logged-in employee profile fields (name/avatar).
 const updateProfile = async (req, res) => {
   try {
     const { employeeId } = req.user
@@ -130,7 +130,7 @@ const updateProfile = async (req, res) => {
   }
 }
 
-// 5. REMOVE - Admin only
+// Delete employee by id (admin operation).
 const remove = async (req, res) => {
   try {
     const { id } = req.params
@@ -144,7 +144,7 @@ const remove = async (req, res) => {
   }
 }
 
-// Exports
+// Export employee controller handlers.
 module.exports = {
   create,
   login,

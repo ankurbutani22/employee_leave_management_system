@@ -3,6 +3,7 @@ require('dotenv').config()
 const Admin = require('./models/Admin')
 const bcrypt = require('bcryptjs')
 
+// Seed default admin credentials if admin@example.com does not already exist.
 async function seedAdmin() {
   try {
     await mongoose.connect(process.env.MONGO_URI)

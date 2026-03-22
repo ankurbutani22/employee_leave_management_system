@@ -4,6 +4,7 @@ const Leave = require('./models/Leave')
 const Employee = require('./models/Employee')
 const bcrypt = require('bcryptjs')
 
+// Seed one demo employee and one pending leave request for testing flows.
 async function seedTestData() {
   try {
     await mongoose.connect(process.env.MONGO_URI)

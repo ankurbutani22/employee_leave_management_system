@@ -1,20 +1,17 @@
 const Leave = require('../models/Leave')
 
-// 1. Create Leave
-// 1. Create Leave (Updated)
+// Create a leave request for the authenticated employee.
 const create = async (req, res) => {
   try {
-    // અહીં આપણે req.body માંથી employeeId લેતા નથી
     const { startDate, endDate, days, reason } = req.body;
 
-    // આપણે Token માંથી employeeId લઈએ છીએ (જે protect middleware એ સેટ કર્યું હોય)
-    // જો req.user ન હોય તો એરર આપો
+    // employeeId must come from validated JWT payload.
     if (!req.user || !req.user.employeeId) {
       return res.status(401).json({ message: 'User not authenticated properly' });
     }
 
     const leave = await Leave.create({
-      employee: req.user.employeeId, // <--- આ ઓટોમેટિક ID લેશે
+      employee: req.user.employeeId,
       startDate,
       endDate,
       days,
@@ -23,12 +20,12 @@ const create = async (req, res) => {
 
     res.json(leave);
   } catch (err) {
-    console.error(err); // ટર્મિનલમાં એરર જોવા માટે
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 };
 
-// 2. List Leaves (Admin)
+// List all leave requests with basic employee info (admin use).
 const list = async (req, res) => {
   try {
     const leaves = await Leave.find().populate('employee', 'name email')
@@ -38,7 +35,7 @@ const list = async (req, res) => {
   }
 }
 
-// 3. Update Status (Admin)
+// Update leave status to approved, cancelled, or pending.
 const updateStatus = async (req, res) => {
   try {
     const { id } = req.params
@@ -52,7 +49,7 @@ const updateStatus = async (req, res) => {
   }
 }
 
-// 4. Get Status (Employee) - આ ફંક્શનમાં જ પ્રોબ્લેમ હતો
+// Return leave history for the logged-in employee.
 const getStatus = async (req, res) => {
   try {
     if (!req.user || !req.user.employeeId) {
@@ -65,5 +62,5 @@ const getStatus = async (req, res) => {
   }
 }
 
-// બધું એકસાથે એક્સપોર્ટ કરો (આનાથી એરર જતી રહેશે)
+// Export leave controller handlers.
 module.exports = { create, list, updateStatus, getStatus }
