@@ -118,10 +118,10 @@ export default function AllEmployees() {
           <p className="text-slate-500 text-sm mt-1">Add an employee to see them listed here.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-3 sm:p-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-2.5 sm:p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
             {employees.map((emp) => (
-              <div key={emp._id || emp.id} className="border border-slate-200 rounded-xl p-4 bg-white shadow-sm">
+              <div key={emp._id || emp.id} className="border border-slate-200 rounded-xl p-3.5 sm:p-4 bg-white shadow-sm">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="flex-shrink-0 h-11 w-11">
@@ -134,14 +134,14 @@ export default function AllEmployees() {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-slate-800 truncate">{emp.name}</p>
+                      <p className="font-semibold text-slate-800 truncate" title={emp.name}>{emp.name}</p>
                       <p className="text-xs text-slate-400 font-mono mt-0.5">ID: #{getShortId(emp)}</p>
                     </div>
                   </div>
 
                   <button
                     onClick={() => remove(emp._id || emp.id)}
-                    className="text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-2 py-1 rounded text-xs font-semibold transition-colors border border-rose-100"
+                    className="text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-2 py-1 rounded text-xs font-semibold transition-colors border border-rose-100 shrink-0"
                   >
                     Remove
                   </button>
@@ -149,7 +149,7 @@ export default function AllEmployees() {
 
                 <div className="mt-4 rounded-lg bg-slate-50 border border-slate-200 px-3 py-2">
                   <p className="text-[11px] uppercase tracking-wide text-slate-400">Contact</p>
-                  <p className="text-sm text-slate-600 break-all mt-0.5">{emp.email}</p>
+                  <p className="text-sm text-slate-600 truncate mt-0.5" title={emp.email}>{emp.email}</p>
                 </div>
               </div>
             ))}
